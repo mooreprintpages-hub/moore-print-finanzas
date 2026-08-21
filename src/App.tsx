@@ -19,6 +19,8 @@ import {
 import { isSupabaseConfigured, supabase } from './lib/supabase'
 import { CustomersPage } from './modules/CustomersPage'
 import { OrdersPage } from './modules/OrdersPage'
+import { InventoryPage } from './modules/InventoryPage'
+import { PurchasesPage } from './modules/PurchasesPage'
 import './modules/modules.css'
 
 type Section = 'dashboard' | 'orders' | 'customers' | 'inventory' | 'purchases' | 'finance' | 'suppliers'
@@ -121,7 +123,9 @@ export default function App() {
           {section === 'dashboard' && <Dashboard businessId={businessId} />}
           {section === 'customers' && <CustomersPage businessId={businessId} />}
           {section === 'orders' && <OrdersPage businessId={businessId} userId={session.user.id} />}
-          {!['dashboard', 'customers', 'orders'].includes(section) && <ModulePlaceholder section={section as Exclude<Section, 'dashboard' | 'customers' | 'orders'>} />}
+          {section === 'inventory' && <InventoryPage businessId={businessId} userId={session.user.id} />}
+          {section === 'purchases' && <PurchasesPage businessId={businessId} userId={session.user.id} />}
+          {!['dashboard', 'customers', 'orders', 'inventory', 'purchases'].includes(section) && <ModulePlaceholder section={section as Exclude<Section, 'dashboard' | 'customers' | 'orders' | 'inventory' | 'purchases'>} />}
         </section>
       </main>
     </div>
@@ -162,7 +166,7 @@ function Dashboard({ businessId }: { businessId: string }) {
     </div>
     <div className="dashboard-grid">
       <article className="panel"><div className="panel__heading"><div><span className="eyebrow">Flujo registrado</span><h2>Resultado operativo simple</h2></div></div><div className="balance-row"><span>Pagos confirmados</span><strong>{loading ? '—' : money.format(payments)}</strong></div><div className="balance-row"><span>Gastos del negocio pagados</span><strong>{loading ? '—' : money.format(expenses)}</strong></div><div className="balance-row balance-row--total"><span>Diferencia</span><strong>{loading ? '—' : money.format(payments - expenses)}</strong></div><p className="panel__note">Lectura rápida de cobros confirmados menos gastos del negocio.</p></article>
-      <article className="panel panel--accent"><span className="eyebrow">Operación</span><h2>Clientes y pedidos activos</h2><p>Los primeros módulos CRUD ya trabajan directamente sobre el backend protegido.</p><div className="status-pill"><span /> Seguridad desde Supabase</div></article>
+      <article className="panel panel--accent"><span className="eyebrow">Operación</span><h2>Operación conectada</h2><p>Clientes, pedidos, inventario y compras ya trabajan directamente sobre el backend protegido.</p><div className="status-pill"><span /> Seguridad desde Supabase</div></article>
     </div>
   </>
 }
@@ -190,7 +194,7 @@ function MembershipPending({ email }: { email: string }) {
   return <main className="center-page"><section className="state-card"><div className="state-card__icon"><Users size={28} /></div><span className="eyebrow">Cuenta autenticada</span><h1>Falta asociar esta cuenta a Moore Print.</h1><p>{email}</p><p>La cuenta todavía no tiene una membresía activa en <code>business_members</code>.</p><button className="secondary-button" onClick={() => void supabase?.auth.signOut()}>Usar otra cuenta</button></section></main>
 }
 
-function ModulePlaceholder({ section }: { section: Exclude<Section, 'dashboard' | 'customers' | 'orders'> }) {
+function ModulePlaceholder({ section }: { section: Exclude<Section, 'dashboard' | 'customers' | 'orders' | 'inventory' | 'purchases'> }) {
   const current = sections.find((item) => item.id === section)!
   const Icon = current.icon
   return <div className="module-placeholder"><div className="state-card__icon"><Icon size={28} /></div><span className="eyebrow">Siguiente etapa</span><h1>{current.label}</h1><p>El backend ya existe; su interfaz se habilitará progresivamente sobre esta misma base.</p></div>
