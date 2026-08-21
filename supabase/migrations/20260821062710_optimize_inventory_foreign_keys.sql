@@ -1,0 +1,10 @@
+create index if not exists inventory_movements_created_by_idx on public.inventory_movements(created_by);
+create index if not exists inventory_movements_location_id_idx on public.inventory_movements(location_id);
+create index if not exists inventory_reservations_created_by_idx on public.inventory_reservations(created_by);
+create index if not exists inventory_reservations_location_id_idx on public.inventory_reservations(location_id);
+create index if not exists inventory_reservations_lot_id_idx on public.inventory_reservations(lot_id);
+create index if not exists material_remnants_location_id_idx on public.material_remnants(location_id);
+create index if not exists material_remnants_lot_id_idx on public.material_remnants(lot_id);
+create index if not exists material_remnants_material_variant_id_idx on public.material_remnants(material_variant_id);
+create index if not exists waste_records_created_by_idx on public.waste_records(created_by);
+create index if not exists waste_records_lot_id_idx on public.waste_records(lot_id);
