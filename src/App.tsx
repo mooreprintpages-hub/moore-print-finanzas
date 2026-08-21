@@ -56,7 +56,7 @@ const money = new Intl.NumberFormat('es-MX', {
   maximumFractionDigits: 2,
 })
 
-function numberValue(value: DashboardSummary[keyof DashboardSummary]) {
+function numberValue(value: number | string | null | undefined) {
   const parsed = Number(value ?? 0)
   return Number.isFinite(parsed) ? parsed : 0
 }
