@@ -7,6 +7,8 @@ import {
   CircleDollarSign,
   ClipboardCheck,
   ClipboardList,
+  Factory,
+  FileText,
   LayoutDashboard,
   LogOut,
   Menu,
@@ -28,10 +30,12 @@ import { FinancePage } from './modules/FinancePage'
 import { SuppliersPage } from './modules/SuppliersPage'
 import { ProductsPage } from './modules/ProductsPage'
 import { ApprovalsPage } from './modules/ApprovalsPage'
+import { QuotesPage } from './modules/QuotesPage'
+import { ProductionPage } from './modules/ProductionPage'
 import { SetupPage } from './modules/SetupPage'
 import './modules/modules.css'
 
-type Section = 'dashboard' | 'orders' | 'customers' | 'products' | 'inventory' | 'purchases' | 'finance' | 'suppliers' | 'approvals' | 'setup'
+type Section = 'dashboard' | 'quotes' | 'orders' | 'production' | 'customers' | 'products' | 'inventory' | 'purchases' | 'finance' | 'suppliers' | 'approvals' | 'setup'
 
 type DashboardSummary = {
   business_id: string
@@ -44,7 +48,9 @@ type DashboardSummary = {
 
 const sections: Array<{ id: Section; label: string; icon: typeof LayoutDashboard }> = [
   { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { id: 'quotes', label: 'Cotizaciones', icon: FileText },
   { id: 'orders', label: 'Pedidos', icon: ClipboardList },
+  { id: 'production', label: 'Producción', icon: Factory },
   { id: 'customers', label: 'Clientes', icon: Users },
   { id: 'products', label: 'Productos', icon: Package },
   { id: 'inventory', label: 'Inventario', icon: Boxes },
@@ -132,9 +138,11 @@ export default function App() {
         </header>
         <section className="content-area">
           {section === 'dashboard' && <Dashboard businessId={businessId} />}
+          {section === 'quotes' && <QuotesPage businessId={businessId} userId={session.user.id} />}
           {section === 'customers' && <CustomersPage businessId={businessId} />}
           {section === 'products' && <ProductsPage businessId={businessId} />}
           {section === 'orders' && <OrdersPage businessId={businessId} userId={session.user.id} />}
+          {section === 'production' && <ProductionPage businessId={businessId} userId={session.user.id} />}
           {section === 'inventory' && <InventoryPage businessId={businessId} userId={session.user.id} />}
           {section === 'purchases' && <PurchasesPage businessId={businessId} userId={session.user.id} />}
           {section === 'finance' && <FinancePage businessId={businessId} userId={session.user.id} />}
@@ -181,7 +189,7 @@ function Dashboard({ businessId }: { businessId: string }) {
     </div>
     <div className="dashboard-grid">
       <article className="panel"><div className="panel__heading"><div><span className="eyebrow">Flujo registrado</span><h2>Resultado operativo simple</h2></div></div><div className="balance-row"><span>Pagos confirmados</span><strong>{loading ? '—' : money.format(payments)}</strong></div><div className="balance-row"><span>Gastos del negocio pagados</span><strong>{loading ? '—' : money.format(expenses)}</strong></div><div className="balance-row balance-row--total"><span>Diferencia</span><strong>{loading ? '—' : money.format(payments - expenses)}</strong></div><p className="panel__note">Lectura rápida de cobros confirmados menos gastos del negocio.</p></article>
-      <article className="panel panel--accent"><span className="eyebrow">Operación</span><h2>Módulos principales activos</h2><p>Clientes, productos, pedidos, inventario, compras, finanzas, proveedores y autorizaciones trabajan sobre el backend protegido.</p><div className="status-pill"><span /> Seguridad desde Supabase</div></article>
+      <article className="panel panel--accent"><span className="eyebrow">Operación</span><h2>Módulos principales activos</h2><p>Cotizaciones, pedidos, producción, clientes, productos, inventario, compras, finanzas, proveedores y autorizaciones trabajan sobre el backend protegido.</p><div className="status-pill"><span /> Seguridad desde Supabase</div></article>
     </div>
   </>
 }
