@@ -5,6 +5,7 @@ import {
   Building2,
   ChevronRight,
   CircleDollarSign,
+  ClipboardCheck,
   ClipboardList,
   LayoutDashboard,
   LogOut,
@@ -26,10 +27,11 @@ import { PurchasesPage } from './modules/PurchasesPage'
 import { FinancePage } from './modules/FinancePage'
 import { SuppliersPage } from './modules/SuppliersPage'
 import { ProductsPage } from './modules/ProductsPage'
+import { ApprovalsPage } from './modules/ApprovalsPage'
 import { SetupPage } from './modules/SetupPage'
 import './modules/modules.css'
 
-type Section = 'dashboard' | 'orders' | 'customers' | 'products' | 'inventory' | 'purchases' | 'finance' | 'suppliers' | 'setup'
+type Section = 'dashboard' | 'orders' | 'customers' | 'products' | 'inventory' | 'purchases' | 'finance' | 'suppliers' | 'approvals' | 'setup'
 
 type DashboardSummary = {
   business_id: string
@@ -49,6 +51,7 @@ const sections: Array<{ id: Section; label: string; icon: typeof LayoutDashboard
   { id: 'purchases', label: 'Compras', icon: ShoppingCart },
   { id: 'finance', label: 'Finanzas', icon: WalletCards },
   { id: 'suppliers', label: 'Proveedores', icon: PackageCheck },
+  { id: 'approvals', label: 'Autorizaciones', icon: ClipboardCheck },
   { id: 'setup', label: 'Configuración', icon: Settings2 },
 ]
 
@@ -136,6 +139,7 @@ export default function App() {
           {section === 'purchases' && <PurchasesPage businessId={businessId} userId={session.user.id} />}
           {section === 'finance' && <FinancePage businessId={businessId} userId={session.user.id} />}
           {section === 'suppliers' && <SuppliersPage businessId={businessId} userId={session.user.id} />}
+          {section === 'approvals' && <ApprovalsPage businessId={businessId} userId={session.user.id} />}
           {section === 'setup' && <SetupPage businessId={businessId} />}
         </section>
       </main>
@@ -177,7 +181,7 @@ function Dashboard({ businessId }: { businessId: string }) {
     </div>
     <div className="dashboard-grid">
       <article className="panel"><div className="panel__heading"><div><span className="eyebrow">Flujo registrado</span><h2>Resultado operativo simple</h2></div></div><div className="balance-row"><span>Pagos confirmados</span><strong>{loading ? '—' : money.format(payments)}</strong></div><div className="balance-row"><span>Gastos del negocio pagados</span><strong>{loading ? '—' : money.format(expenses)}</strong></div><div className="balance-row balance-row--total"><span>Diferencia</span><strong>{loading ? '—' : money.format(payments - expenses)}</strong></div><p className="panel__note">Lectura rápida de cobros confirmados menos gastos del negocio.</p></article>
-      <article className="panel panel--accent"><span className="eyebrow">Operación</span><h2>Módulos principales activos</h2><p>Clientes, productos, pedidos, inventario, compras, finanzas y proveedores trabajan directamente sobre el backend protegido.</p><div className="status-pill"><span /> Seguridad desde Supabase</div></article>
+      <article className="panel panel--accent"><span className="eyebrow">Operación</span><h2>Módulos principales activos</h2><p>Clientes, productos, pedidos, inventario, compras, finanzas, proveedores y autorizaciones trabajan sobre el backend protegido.</p><div className="status-pill"><span /> Seguridad desde Supabase</div></article>
     </div>
   </>
 }
