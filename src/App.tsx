@@ -11,6 +11,7 @@ import {
   Menu,
   PackageCheck,
   ReceiptText,
+  Settings2,
   ShoppingCart,
   Users,
   WalletCards,
@@ -23,9 +24,10 @@ import { InventoryPage } from './modules/InventoryPage'
 import { PurchasesPage } from './modules/PurchasesPage'
 import { FinancePage } from './modules/FinancePage'
 import { SuppliersPage } from './modules/SuppliersPage'
+import { SetupPage } from './modules/SetupPage'
 import './modules/modules.css'
 
-type Section = 'dashboard' | 'orders' | 'customers' | 'inventory' | 'purchases' | 'finance' | 'suppliers'
+type Section = 'dashboard' | 'orders' | 'customers' | 'inventory' | 'purchases' | 'finance' | 'suppliers' | 'setup'
 
 type DashboardSummary = {
   business_id: string
@@ -44,6 +46,7 @@ const sections: Array<{ id: Section; label: string; icon: typeof LayoutDashboard
   { id: 'purchases', label: 'Compras', icon: ShoppingCart },
   { id: 'finance', label: 'Finanzas', icon: WalletCards },
   { id: 'suppliers', label: 'Proveedores', icon: PackageCheck },
+  { id: 'setup', label: 'Configuración', icon: Settings2 },
 ]
 
 const money = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN', maximumFractionDigits: 2 })
@@ -129,6 +132,7 @@ export default function App() {
           {section === 'purchases' && <PurchasesPage businessId={businessId} userId={session.user.id} />}
           {section === 'finance' && <FinancePage businessId={businessId} userId={session.user.id} />}
           {section === 'suppliers' && <SuppliersPage businessId={businessId} userId={session.user.id} />}
+          {section === 'setup' && <SetupPage businessId={businessId} />}
         </section>
       </main>
     </div>
