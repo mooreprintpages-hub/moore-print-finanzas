@@ -1,6 +1,7 @@
 import { FormEvent, useEffect, useMemo, useState } from 'react'
 import { Building2, Mail, MapPin, Pencil, Phone, Plus, Search, UserRound, X } from 'lucide-react'
 import { supabase } from '../lib/supabase'
+import { CustomerAdvancedPanel } from './CustomerAdvancedPanel'
 
 type Customer = {
   id: string
@@ -147,7 +148,7 @@ export function CustomersPage({ businessId }: { businessId: string }) {
         <div>
           <span className="eyebrow">Relaciones comerciales</span>
           <h1>Clientes</h1>
-          <p>Personas y empresas registradas en Moore Print.</p>
+          <p>Personas y empresas, contactos, reglas, etiquetas y precios especiales.</p>
         </div>
         <button className="primary-button primary-button--auto" onClick={openCreate}><Plus size={18} /> Nuevo cliente</button>
       </div>
@@ -188,21 +189,22 @@ export function CustomersPage({ businessId }: { businessId: string }) {
 
       {selected && (
         <div className="drawer-backdrop" onClick={() => setSelected(null)}>
-          <aside className="detail-drawer" onClick={(event) => event.stopPropagation()}>
+          <aside className="detail-drawer detail-drawer--wide" onClick={(event) => event.stopPropagation()}>
             <div className="drawer-header">
               <div><span className="eyebrow">Cliente</span><h2>{selected.name}</h2></div>
               <button className="icon-button" onClick={() => setSelected(null)} aria-label="Cerrar"><X size={20} /></button>
             </div>
             <div className="detail-stack">
               <Detail icon={<UserRound size={17} />} label="Tipo" value={selected.customer_type === 'business' ? 'Empresa' : 'Persona'} />
-              {selected.contact_name && <Detail icon={<UserRound size={17} />} label="Contacto" value={selected.contact_name} />}
-              <Detail icon={<Phone size={17} />} label="Teléfono" value={selected.phone || 'Sin registrar'} />
+              {selected.contact_name && <Detail icon={<UserRound size={17} />} label="Contacto principal" value={selected.contact_name} />}
+              <Detail icon={<Phone size={17} />} label="Teléfono principal" value={selected.phone || 'Sin registrar'} />
               <Detail icon={<Mail size={17} />} label="Correo" value={selected.email || 'Sin registrar'} />
               <Detail icon={<MapPin size={17} />} label="Dirección" value={selected.address || 'Sin registrar'} />
               {selected.tax_id && <Detail icon={<Building2 size={17} />} label="RFC / ID fiscal" value={selected.tax_id} />}
             </div>
             {selected.notes && <div className="detail-notes"><span className="eyebrow">Notas</span><p>{selected.notes}</p></div>}
-            <button className="secondary-button" onClick={() => { setSelected(null); openEdit(selected) }}><Pencil size={17} /> Editar cliente</button>
+            <button className="secondary-button" onClick={() => { setSelected(null); openEdit(selected) }}><Pencil size={17} /> Editar datos básicos</button>
+            <CustomerAdvancedPanel businessId={businessId} customerId={selected.id} />
           </aside>
         </div>
       )}
@@ -218,8 +220,8 @@ export function CustomersPage({ businessId }: { businessId: string }) {
               <div className="form-grid">
                 <label>Tipo<select value={form.customer_type} onChange={(event) => setForm({ ...form, customer_type: event.target.value as CustomerForm['customer_type'] })}><option value="person">Persona</option><option value="business">Empresa</option></select></label>
                 <label>Nombre<input required value={form.name} onChange={(event) => setForm({ ...form, name: event.target.value })} /></label>
-                <label>Contacto<input value={form.contact_name} onChange={(event) => setForm({ ...form, contact_name: event.target.value })} /></label>
-                <label>Teléfono<input value={form.phone} onChange={(event) => setForm({ ...form, phone: event.target.value })} /></label>
+                <label>Contacto principal<input value={form.contact_name} onChange={(event) => setForm({ ...form, contact_name: event.target.value })} /></label>
+                <label>Teléfono principal<input value={form.phone} onChange={(event) => setForm({ ...form, phone: event.target.value })} /></label>
                 <label>Correo<input type="email" value={form.email} onChange={(event) => setForm({ ...form, email: event.target.value })} /></label>
                 <label>RFC / ID fiscal<input value={form.tax_id} onChange={(event) => setForm({ ...form, tax_id: event.target.value })} /></label>
                 <label className="form-span-2">Dirección<input value={form.address} onChange={(event) => setForm({ ...form, address: event.target.value })} /></label>
