@@ -1,6 +1,7 @@
 import { FormEvent, useCallback, useEffect, useState } from 'react'
 import { Building2, CheckCircle2, CircleDollarSign, MapPin, PackagePlus, RefreshCw } from 'lucide-react'
 import { supabase } from '../lib/supabase'
+import './setup.css'
 
 type SetupStatus = {
   branches: number
