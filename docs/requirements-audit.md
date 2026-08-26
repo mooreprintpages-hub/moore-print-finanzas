@@ -1,172 +1,153 @@
 # Moore Print Finanzas — Auditoría de requisitos aprobados
 
-Fecha de revisión: 2026-08-24
+Fecha de revisión: 2026-08-25
 
 Fuente funcional: `Moore_Print_Finanzas_Documento_Maestro.docx`.
 
 ## Criterio de terminado
 
-Un requisito no se considera completamente terminado sólo porque exista una tabla. Para esta auditoría se usan cuatro niveles:
-
 - **Operativo**: backend + RLS/permisos + interfaz + flujo utilizable.
+- **Parcial**: existe el flujo principal, pero faltan detalles o pruebas reales.
 - **Backend listo / UI pendiente**: estructura y reglas existen, pero no hay interfaz completa.
-- **Parcial**: existe una parte, pero faltan piezas aprobadas.
-- **Pendiente**: el requisito aprobado todavía no existe en el backend.
+- **Pendiente**: requisito aprobado aún no implementado.
 
-## 1. Core, seguridad y negocio
+## Estado consolidado
 
-| Requisito | Estado | Observación |
-|---|---|---|
-| businesses / multi-negocio | Operativo | `business_id` es la base de aislamiento. |
-| Supabase Auth | Operativo | Primer Propietario creado y asociado. |
-| profiles / business_members | Operativo | Perfil automático + membresía real. |
-| roles / permissions / role_permissions | Operativo backend | Propietario tiene permisos efectivos. |
-| member_permissions | Backend listo / UI pendiente | Excepciones por empleado existen, falta administración desde UI. |
-| permission_limits | Backend listo / UI pendiente | Límites existen, falta administración desde UI. |
-| branches / areas / locations | Operativo básico | Setup permite sucursal/ubicación; áreas todavía no tienen administración completa. |
-| approval_requests | **Pendiente** | Requisito aprobado para descuentos, compras grandes/urgentes, inventario negativo, entrega con saldo y precio bajo margen. |
-
-## 2. Clientes
+### Core, seguridad y administración
 
 | Requisito | Estado | Observación |
 |---|---|---|
-| customers persona/empresa | Operativo | Alta, edición, búsqueda y detalle básico. |
-| customer_phones | **Pendiente** | No existe tabla. |
-| customer_contacts | **Pendiente** | No existe tabla; requisito de múltiples contactos de empresa. |
-| customer_contact_roles | **Pendiente** | No existe tabla. |
-| customer_tax_profiles | **Pendiente** | No existe tabla. |
-| customer_tags / assignments | **Pendiente** | Frecuente, Mayoreo, Problemático, Crédito, VIP, Nuevo, etc. |
-| customer_rules | **Pendiente** | Anticipo mínimo, límite de crédito, exposición, pago total, bloqueo. |
-| customer_price_agreements | **Pendiente** | Precio especial por cliente/producto. |
-| customer_price_history | **Pendiente** | Historial de acuerdos de precio. |
-| customer_financial_summary | Backend listo | Vista consolidada existe; falta ampliar UI de cliente. |
+| businesses / multi-negocio | Operativo | Aislamiento por `business_id`. |
+| Supabase Auth + profiles + memberships | Operativo | Propietario real vinculado al negocio. |
+| roles / permissions / member_permissions / permission_limits | Operativo | Administración central disponible en UI. |
+| branches / locations | Operativo básico | Setup inicial disponible. |
+| areas | Parcial | Estructura existe; falta una pantalla dedicada de administración completa. |
+| approval_requests | Operativo | Solicitud, aprobación y rechazo de excepciones. |
+| papelera / soft delete | Operativo | Restauración central desde Administración. |
 
-## 3. Productos, variantes, materiales y precios
+### Clientes
 
 | Requisito | Estado | Observación |
 |---|---|---|
-| products | Backend listo / UI pendiente | No hay módulo de Productos en navegación. |
-| product_variants | Parcial | Existe tabla, pero falta el modelo flexible aprobado de atributos. |
-| variant_attributes | **Pendiente** | No existe. |
-| variant_attribute_values | **Pendiente** | No existe. |
-| product_variant_values | **Pendiente** | No existe. |
-| análisis talla/color/marca/combinación | Parcial | La arquitectura actual no permite cubrirlo completamente hasta terminar atributos flexibles. |
-| materials | Operativo parcial | Ya existe y ahora puede crearse también desde Proveedores. |
-| material_variants | Operativo backend | Variante inicial se crea en setup/proveedor. |
-| recetas/BOM | Backend listo / UI pendiente | `product_recipes` y `product_recipe_items`. |
-| precios de producto | Backend listo / UI pendiente | `product_prices`. |
-| costos de materiales | Backend listo / UI pendiente | Historial existe. |
-| experimentos de precio | Pendiente opcional | Documento indicó preparar arquitectura, no necesariamente activar en V1. |
+| customers persona/empresa | Operativo | Alta, edición, búsqueda y detalle. |
+| teléfonos y múltiples contactos | Operativo | Incluye roles de contacto. |
+| perfil fiscal | Operativo | Capturable desde detalle. |
+| etiquetas / reglas | Operativo | Crédito, anticipo, bloqueo, etc. |
+| precios especiales e historial | Operativo | Acuerdos e historial por cliente/producto. |
+| customer_financial_summary | Parcial | Backend listo; falta una visualización financiera más completa en el detalle del cliente. |
 
-## 4. Proveedores
+### Productos, variantes y materiales
 
 | Requisito | Estado | Observación |
 |---|---|---|
-| suppliers | Operativo | CRUD básico y detalle. |
-| supplier_materials | **Operativo tras PR #18** | Permite existente o crear material nuevo y asociarlo. |
-| proveedor preferido / marca / lead time / precio actual | Operativo | Capturable al asociar material. |
-| supplier_price_history | Operativo parcial | Se registra precio inicial; falta UI de consulta/edición histórica. |
-| supplier_price_tiers | Backend listo / UI pendiente | Escalas por cantidad existen en DB, falta UI. |
-| supplier_reviews | **Operativo tras PR #18** | Captura entrega, exactitud y calidad. |
-| supplier_incidents | Operativo parcial | Se pueden registrar; falta flujo UI para cerrar/resolver incidencia. |
-| supplier_performance | Operativo | Se muestra desempeño calculado. |
+| products / services | Operativo | Fabricado, Reventa, Mixto y Servicio. |
+| variantes flexibles | Operativo | Talla, Color, Marca, Modelo, Calidad, Acabado y Capacidad. |
+| recetas/BOM | Operativo | Captura de materiales y merma. |
+| precios menudeo/mayoreo/especial | Operativo | UI disponible. |
+| rentabilidad de producto | Operativo básico | Consulta disponible desde Productos. |
+| materiales / variantes | Operativo | Alta y variante inicial desde Setup/Proveedores. |
+| análisis agregado talla/color/marca | Parcial | Modelo ya lo soporta; falta reporte agregado específico. |
 
-## 5. Compras e inventario
-
-| Requisito | Estado | Observación |
-|---|---|---|
-| purchases / purchase_items | Operativo básico | Crear compra, partidas y estados. |
-| recepciones parciales | Operativo | Recepción genera lote/movimiento y actualiza cantidades. |
-| inventario en tránsito | Operativo | Vista calculada. |
-| inventory_lots | Operativo backend/UI lectura | Lotes visibles. |
-| inventory_movements | Operativo | Historial + ajustes manuales. |
-| físico / reservado / disponible | Operativo | Vista `inventory_availability`. |
-| inventory_reservations | Backend listo / UI pendiente | Relacionadas a pedidos. |
-| material_remnants | Backend listo / UI pendiente | Sobrantes DTF/vinil modelados, sin pantalla operativa. |
-| waste_records | Backend listo / UI pendiente | Merma y recuperación modeladas, sin pantalla completa. |
-
-## 6. Cotizaciones, pedidos y producción
+### Proveedores
 
 | Requisito | Estado | Observación |
 |---|---|---|
-| quotes / versiones inmutables | Backend listo / UI pendiente | Reglas existen; no hay módulo de Cotizaciones. |
-| quote_items / quote_options | Backend listo / UI pendiente | Estándar/Premium soportado. |
-| quote_price_reactions | Backend listo / UI pendiente | Sin captura desde frontend. |
-| orders / order_items | Operativo básico | Alta, edición, detalle y partidas. |
-| workflows de producción | Backend listo / UI pendiente | Plantillas, pasos, dependencias y paralelismo existen. |
-| estados de producción | Backend listo / UI pendiente | pending/in_progress/completed/blocked/cancelled. |
-| aprobación de diseño | Backend listo / UI pendiente | Sin flujo visual completo. |
-| costeo estimado vs real | Backend listo / UI pendiente | `order_cost_items` + `order_profitability`. |
-| mano de obra y tiempos | Backend listo / UI pendiente | actividades/tarifas/registros existen. |
+| suppliers / supplier_materials | Operativo | Material existente o nuevo desde proveedor. |
+| proveedor preferido / marca / lead time / precio | Operativo | Capturable. |
+| historial y escalas de precio | Operativo | UI avanzada disponible. |
+| evaluaciones / desempeño | Operativo | Captura y lectura. |
+| incidencias / resolución | Operativo | Registro y cierre con resoluciones válidas. |
 
-## 7. Finanzas
+### Compras e inventario
 
 | Requisito | Estado | Observación |
 |---|---|---|
-| payment_methods | Operativo | Efectivo, Transferencia, Mercado Pago, Tarjeta y Depósito. |
-| pagos / anticipos / abonos | Operativo básico | Registro y confirmación desde UI. |
-| comisiones de pago | Backend listo / UI pendiente | Regla de deuda bruta vs neto en cuenta implementada. |
-| financial_accounts / saldos | Operativo básico | Alta y saldo calculado. |
-| expenses | Operativo básico | Registro y pago. |
-| gastos mixtos / allocations | Backend listo / UI pendiente | Sin interfaz completa. |
-| recurring_expenses | Backend listo / UI pendiente | Sin interfaz. |
-| budgets | **Pendiente** | Requisito aprobado por categoría/periodo/monto. |
-| account_transfers | Backend listo / UI pendiente | Transferencias internas no son ingreso/gasto. |
-| cash_transits | Backend listo / UI pendiente | Sin interfaz. |
-| cash_sessions | Backend listo / UI pendiente | Caja y ajustes sin interfaz completa. |
-| reconciliations | Backend listo / UI pendiente | Sin interfaz. |
-| customer credits | Backend listo / UI pendiente | Movimientos históricos existen. |
-| payment_promises | Backend listo / UI pendiente | Sin interfaz. |
-| payment_plans / installments | Backend listo / UI pendiente | Sin interfaz. |
-| bad_debts / recoveries | Backend listo / UI pendiente | Sin interfaz. |
-| refunds | Backend listo / UI pendiente | Sin interfaz. |
-| owner transactions | Backend listo / UI pendiente | Aportaciones/retiros/distribución/reembolso. |
-| owner compensation target | Backend listo / UI pendiente | Meta no se trata como pago. |
-| funds | Backend listo / UI pendiente | Sin interfaz. |
-| assets | Backend listo / UI pendiente | Sin interfaz. |
-| debts / debt_payments | Backend listo / UI pendiente | Sin interfaz. |
-| financial_goals | Backend listo / UI pendiente | Sin interfaz. |
+| purchases / items | Operativo | Alta, partidas, estados. |
+| recepciones parciales / lotes / tránsito | Operativo | Integrado a inventario. |
+| movimientos / físico / reservado / disponible | Operativo | UI y vistas calculadas. |
+| reservas por pedido | Operativo | Reservar, consumir y liberar. |
+| sobrantes reutilizables | Operativo | Medidas y valor remanente. |
+| mermas / recuperaciones | Operativo | Captura de costo y recuperación. |
 
-## 8. Operación complementaria
+### Cotizaciones, pedidos y producción
 
 | Requisito | Estado | Observación |
 |---|---|---|
-| deliveries / delivery_points | Backend listo / UI pendiente | Sin foto/firma inicial, como se acordó. |
-| trips / tasks / transport segments | Backend listo / UI pendiente | Recorridos multimodal modelados. |
-| tasks / recurrences | Backend listo / UI pendiente | Agenda y seguimiento a clientes sin pantalla. |
-| promotions / customer groups | Backend listo / UI pendiente | Sin pantalla operativa. |
-| order incidents / warranties | Backend listo / UI pendiente | Sin pantalla. |
-| audit_log | Backend listo | Acciones críticas; falta visor administrativo. |
-| papelera / soft delete | Parcial | Implementada en varias entidades importantes, falta UI central de restauración. |
-| financial_periods / inventory snapshots | Backend listo / UI pendiente | Cierres y snapshot existen. |
+| cotizaciones versionadas | Operativo | Versiones, envío y conversión a pedido. |
+| opciones Estándar/Premium | Operativo | UI disponible. |
+| reacción al precio | Operativo | Capturable desde Cotizaciones. |
+| pedidos / partidas | Operativo | Flujo base usable. |
+| workflows / pasos / dependencias | Operativo | Producción conectada. |
+| aprobación de diseño | Operativo | UI disponible. |
+| costeo estimado vs real / rentabilidad | Operativo | Producción muestra comparativos. |
+| mano de obra / tiempos | Operativo básico | Registro disponible. |
 
-## 9. Dashboard y reportes
+### Finanzas
 
 | Requisito | Estado | Observación |
 |---|---|---|
-| dashboard_financial_summary | Operativo | Métricas financieras básicas visibles. |
-| inventory_availability | Operativo | Visible en Inventario. |
-| supplier_performance | Operativo | Visible en Proveedores. |
-| order_profitability | Backend listo / UI pendiente | Falta mostrarlo por pedido/reportes. |
-| product_profitability | Backend listo / UI pendiente | Falta módulo de productos/reportes. |
-| customer_financial_summary | Backend listo / UI pendiente | Falta detalle financiero del cliente. |
-| cash_position | Operativo básico | Usado por Dashboard/Finanzas. |
-| análisis de tallas/colores/marcas | Pendiente por dependencia | Requiere completar atributos flexibles. |
-| alertas visibles en dashboard | Parcial | Dashboard básico, falta sistema completo de alertas operativas. |
+| métodos de pago / pagos / anticipos | Operativo | Registro y confirmación. |
+| cuentas / saldos | Operativo | Saldos calculados. |
+| gastos / gastos mixtos / allocations | Operativo | Incluye asignación a pedidos. |
+| gastos recurrentes | Operativo | Administración financiera. |
+| presupuestos | Operativo | Por categoría/periodo/monto. |
+| transferencias | Operativo | Entre cuentas propias. |
+| efectivo en tránsito | Operativo | Confirmación de recepción. |
+| caja | Operativo básico | Apertura y cierre; faltan ajustes manuales de caja en UI. |
+| conciliaciones | Operativo | UI avanzada. |
+| créditos a favor | Operativo básico | Alta visible; movimientos detallados todavía parciales. |
+| promesas / planes de pago | Operativo | UI disponible. |
+| incobrables / recuperaciones | Operativo | Administración financiera. |
+| reembolsos | Operativo | UI avanzada. |
+| propietarios | Operativo | Aportaciones, retiros y distribuciones. |
+| meta de compensación de propietario | Backend listo / UI pendiente | `owner_compensation_targets` existe. |
+| fondos / activos / deudas / pagos de deuda / metas | Operativo | UI disponible. |
+| cierres mensuales / snapshots | Operativo | Cierre/reapertura con snapshot automático. |
+| auditoría | Operativo | Visor disponible. |
+| comisiones de pago | Parcial | Backend automático; falta pantalla detallada de comisiones por pago. |
 
-## Prioridad de cierre recomendada
+### Operaciones
 
-1. **Corregir Proveedores/materiales** y desplegarlo.
-2. **Completar clientes avanzados**: contactos, etiquetas, reglas y precios especiales.
-3. **Completar variantes flexibles** para talla/color/marca/modelo/calidad/acabado/capacidad.
-4. **Crear approval_requests** y conectar límites/autorizaciones.
-5. **Crear módulo Productos** con variantes, precios, recetas y rentabilidad.
-6. **Crear módulo Cotizaciones + Producción**.
-7. **Ampliar Finanzas** con transferencias, caja, conciliaciones, créditos, planes, fondos, activos, deudas, metas y presupuestos.
-8. **Crear Operaciones**: entregas, recorridos, agenda, promociones, incidencias y mano de obra.
-9. **Crear administración de empleados/permisos/papelera**.
-10. **Pruebas E2E** contra cada respuesta aprobada y cierre sólo cuando backend + RLS + UI + prueba estén completos.
+| Requisito | Estado | Observación |
+|---|---|---|
+| entregas | Operativo | Alta y cierre. |
+| puntos de entrega | Operativo | UI detallada. |
+| recorridos / tareas / segmentos de transporte | Operativo | UI básica y detallada. |
+| recurrencias | Operativo | UI disponible. |
+| promociones / grupos de clientes | Operativo | UI disponible. |
+| incidencias / garantías | Operativo | Alta y resolución básica. |
+
+### Dashboard y reportes
+
+| Requisito | Estado | Observación |
+|---|---|---|
+| resumen financiero | Operativo | Pedidos, pagos, cuentas por cobrar y efectivo. |
+| inventario / proveedor / rentabilidad | Operativo en módulos | Datos disponibles en sus módulos. |
+| análisis color/talla/marca | Parcial | Falta reporte agregado. |
+| alertas visibles | Parcial | Falta panel consolidado de alertas operativas/financieras. |
+| reportes por empleado y consolidado | Parcial | Datos de usuario/actividad existen; falta reporte específico por empleado. |
+
+## Brechas reales después del PR #32
+
+1. Administración completa de **áreas** por sucursal.
+2. Vista ampliada de **customer_financial_summary** en Clientes.
+3. Reportes agregados de **talla, color, marca y combinaciones**.
+4. **Ajustes de caja** (`cash_session_adjustments`) desde UI.
+5. Movimientos detallados de **crédito a favor** (`customer_credit_movements`).
+6. **Meta de compensación de propietarios** (`owner_compensation_targets`) desde UI.
+7. Vista detallada de **comisiones de pago** (`payment_fees`).
+8. **Panel de alertas** en Dashboard.
+9. **Reporte por empleado** y consolidado.
+10. Pruebas funcionales E2E con datos reales y validación final de RLS.
+
+## Prioridad de cierre
+
+1. Finanzas finas: ajustes de caja, créditos a favor, compensación de propietarios y comisiones.
+2. Dashboard/alertas y reportes por empleado.
+3. Reportes de talla/color/marca y detalle financiero de clientes.
+4. Administración completa de áreas.
+5. Pruebas E2E y corrección de incidencias encontradas.
 
 ## Conclusión
 
-El sistema no está vacío ni mal encaminado: una parte grande del backend ya existe y está protegida con RLS. Sin embargo, **no debe considerarse todavía 100% terminado respecto al cuestionario original**. La brecha principal ya no es arquitectura: es terminar algunas estructuras aprobadas y exponer muchas funciones existentes mediante interfaz y pruebas operativas.
+La aplicación ya cubre la mayor parte del cuestionario original tanto en backend como en interfaz. La fase actual ya no es construir los módulos principales, sino cerrar detalles administrativos/reportes y realizar pruebas integrales con datos reales. Ningún punto debe considerarse cerrado definitivamente hasta pasar prueba funcional y RLS en una sesión real.
