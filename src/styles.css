@@ -22,19 +22,19 @@ button { cursor: pointer; }
 code { font-family: "SFMono-Regular", Consolas, monospace; font-size: .9em; }
 
 .app-shell { min-height: 100vh; display: grid; grid-template-columns: 260px 1fr; }
-.sidebar { position: sticky; top: 0; height: 100vh; background: var(--sidebar); color: white; padding: 24px 18px; display: flex; flex-direction: column; z-index: 30; }
-.brand { display: flex; align-items: center; gap: 12px; min-height: 48px; }
+.sidebar { position: sticky; top: 0; height: 100vh; background: var(--sidebar); color: white; padding: 24px 18px; display: flex; flex-direction: column; z-index: 30; min-height: 0; }
+.brand { display: flex; align-items: center; gap: 12px; min-height: 48px; flex-shrink: 0; }
 .brand__mark { width: 42px; height: 42px; border-radius: 13px; display: grid; place-items: center; background: var(--accent); color: #171717; font-weight: 900; letter-spacing: -.04em; }
 .brand strong, .brand span { display: block; }
 .brand strong { font-size: 15px; }
 .brand span { margin-top: 2px; color: #9ca3af; font-size: 12px; }
-.nav-list { margin-top: 34px; display: grid; gap: 6px; }
+.nav-list { margin-top: 34px; display: grid; gap: 6px; overflow-y: auto; min-height: 0; padding-right: 2px; overscroll-behavior: contain; }
 .nav-item { width: 100%; border: 0; background: transparent; color: #aeb5bf; padding: 11px 12px; border-radius: 10px; display: grid; grid-template-columns: 20px 1fr 16px; gap: 10px; align-items: center; text-align: left; }
 .nav-item:hover { background: #191f26; color: white; }
 .nav-item--active { background: #20262d; color: white; }
 .nav-item--active::before { content: ""; position: absolute; }
 .nav-item__chevron { opacity: .45; }
-.sidebar__footer { margin-top: auto; border-top: 1px solid #2c333b; padding: 18px 6px 4px; display: grid; gap: 8px; }
+.sidebar__footer { margin-top: auto; border-top: 1px solid #2c333b; padding: 18px 6px 4px; display: grid; gap: 8px; flex-shrink: 0; }
 .sidebar__footer strong { overflow: hidden; text-overflow: ellipsis; font-size: 12px; font-weight: 600; }
 .logout-button { display: inline-flex; gap: 8px; align-items: center; margin-top: 5px; padding: 9px 0; color: #c5cbd3; background: transparent; border: 0; }
 .sidebar__close, .mobile-menu { display: none !important; }
