@@ -24,9 +24,14 @@ Leyenda: ✅ implementado/comprobado · 🟡 parcial o pendiente de UX/validaci�
 - ✅ Pasar a pedido / Poner en espera.
 - ✅ Recibo de cotización con subtotal, descuentos, entrega, impuestos, total y anticipo sugerido.
 - ✅ Encuesta/reacción de precio con Aceptado, Incómodo/caro, Negociación y Rechazado; historial mostrado en español.
+- ✅ Reacción puede asociarse a producto y existe resumen por producto con porcentaje de aceptación.
+- ✅ Si una cotización contiene un solo producto, la reacción se asocia automáticamente a él.
+- 🟡 Si una cotización contiene varios productos, falta selector explícito de producto al registrar la reacción.
 - ✅ Precios base, variantes, mayoreo/menudeo/especiales y precios especiales por cliente.
-- 🟡 Sugerencia automática de precio/margen según demanda: ventas/frecuencia ya reportadas, falta convertirlas en recomendación explícita.
-- 🟡 Ajuste por subida de insumos: historial/costos existen, falta alerta explícita de revisión de precio cuando suba un insumo.
+- ✅ Ventas/frecuencia, margen real y señales de demanda se combinan en recomendaciones configurables.
+- ✅ Margen objetivo y umbrales de demanda de 30 días son configurables; no se usan valores inventados.
+- ✅ Subidas de costo de proveedor se comparan contra el precio anterior y generan señal de revisión para productos que usan ese material.
+- ✅ Las recomendaciones se muestran en Reportes y nunca cambian precios automáticamente.
 
 ## Pedidos
 - ✅ Folio, cliente, partidas, cantidad, precio, subtotal, descuentos, impuestos, entrega y total.
@@ -37,7 +42,7 @@ Leyenda: ✅ implementado/comprobado · 🟡 parcial o pendiente de UX/validaci�
 - ✅ Ancho y alto estructurados en partida para trabajos variables como lona.
 - ✅ Talla/color/marca y otros atributos mediante variantes.
 - ✅ Diseño/aprobación por partida con Pendiente, Aprobado, Solicita cambios y Rechazado.
-- 🟡 El requisito simplificado “Diseño listo” existe funcionalmente como Aprobado, pero falta una acción rápida con ese texto en el flujo principal de Pedidos.
+- 🟡 El requisito simplificado “Diseño listo” existe funcionalmente como Aprobado, pero falta una acción rápida con ese texto en el flujo principal.
 
 ## Anticipos, pagos y cobros
 - ✅ Anticipos/abonos/pagos con método, cuenta, referencia y estado.
@@ -53,15 +58,16 @@ Leyenda: ✅ implementado/comprobado · 🟡 parcial o pendiente de UX/validaci�
 - ✅ Renta/luz/agua configurables como categorías separadas.
 - 🟡 Camión ida/regreso y gasolina pueden registrarse como gasto y asignarse a pedido mediante estructuras existentes, pero falta captura guiada específica.
 - ✅ Didi/Camión/Propio/Otro en pedido.
-- 🟡 Didi/Camión/Propio/Otro en compra ya existe en backend; falta exposición en pantalla de Compras.
+- ✅ Didi/Camión/Propio/Otro + costo en Compras.
 - ✅ Presupuestos, conciliaciones, transferencias, reembolsos, fondos, deudas, activos y metas.
 
 ## Proveedores y compras
 - ✅ Proveedores, contacto, teléfono, email, dirección, notas.
 - ✅ Materiales por proveedor, precios, historial, escalas, evaluaciones e incidencias.
 - ✅ Compras, partidas, tránsito, recepción parcial y creación de lotes.
-- ✅ Compra puede vincularse a un pedido (`source_order_id`) en backend.
-- 🟡 Vinculación Compra ↔ Pedido pendiente de exposición en UI de Compras.
+- ✅ Compra puede vincularse a un pedido (`source_order_id`).
+- ✅ Pedido relacionado se selecciona y muestra desde la UI de Compras.
+- ✅ Método/costo de recolección se captura y muestra desde la UI de Compras.
 - ✅ Regla de compra mínima/incrementos DTF-vinil: mínimo 0.5 m e incrementos de 0.5.
 - ✅ Prueba transaccional: 0.5 m aceptado; 0.25 y 0.75 bloqueados.
 - ✅ Máximo por corte de vinil implementado mediante `max_cut_qty`.
@@ -85,7 +91,7 @@ Leyenda: ✅ implementado/comprobado · 🟡 parcial o pendiente de UX/validaci�
 - ✅ Recetas/BOM, costos estimados/reales, mano de obra y rentabilidad.
 - ✅ Regla de lona parametrizada: m² × tarifa (`pricing_rate`, referencia $90) y redondeo hacia arriba (`rounding_increment`).
 - ✅ Prueba de fórmula: 2 × 1.04 × $90 = $187.20 → $190.
-- 🟡 La fórmula de lona está comprobada en backend, pero falta botón/calculadora directa en cotización/pedido para rellenar automáticamente el precio.
+- 🟡 La fórmula de lona está comprobada en backend, pero falta calculadora directa en cotización/pedido para rellenar automáticamente el precio.
 
 ## Producción y operación
 - ✅ Workflow, dependencias, pasos y finalización.
@@ -99,31 +105,38 @@ Leyenda: ✅ implementado/comprobado · 🟡 parcial o pendiente de UX/validaci�
 - ✅ Entregas con tipo, costos estimado/real/cobrado, receptor, responsable, código y estado.
 - ✅ Viajes/tareas logísticas existentes.
 - ✅ Pedido identifica Didi/Camión/Propio/Otro.
-- 🟡 Compra identifica esos métodos en backend; falta UI.
+- ✅ Compra identifica Didi/Camión/Propio/Otro y costo desde UI.
 
 ## Dashboard y reportes
 - ✅ Cómo voy: valor de pedidos, pagos, por cobrar, efectivo y gastos.
 - ✅ Pendientes: tareas, autorizaciones, pagos, stock y recurrentes.
 - ✅ Reporte por empleado y consolidado.
 - ✅ Tallas, colores, marcas y combinaciones más vendidas.
-- ✅ Ventas por producto agregadas en PR #58.
-- ✅ Frecuencia por producto agregada como cantidad de pedidos y unidades vendidas.
+- ✅ Ventas por producto y frecuencia por cantidad de pedidos/unidades.
+- ✅ Encuesta de aceptación de precio resumida por producto.
+- ✅ Recomendaciones configurables por margen, demanda y subida de insumos.
 - ✅ Próximos gastos y compromisos 30 días.
+
+## Seguridad y rendimiento
+- ✅ RPC sensibles de inventario y gasto recurrente ya no pueden ejecutarse como `anon`; quedan disponibles sólo para autenticados y conservan validación interna de permisos del negocio.
+- 🟡 El asesor sigue mostrando advertencias de `SECURITY DEFINER` para autenticados porque esas RPC deben ser llamadas por la app; sus funciones sí verifican permisos internamente.
+- 🟡 Protección contra contraseñas filtradas de Supabase Auth continúa desactivada; requiere revisar configuración de Auth.
+- ✅ Se agregó índice faltante para `recurring_expenses.last_expense_id`.
+- ℹ️ Los avisos de índices “sin uso” no se están eliminando automáticamente: muchos corresponden a funciones nuevas o poco usadas y borrarlos sin evidencia sería riesgoso.
 
 ## UX y administración
 - ✅ Responsive/móvil.
 - ✅ Navegación consolidada de Inventario, Proveedores, Operaciones y Finanzas.
 - ✅ Papelera/restauración visible.
-- ✅ Permisos principales en español.
-- 🟡 Quedan códigos técnicos visibles en módulos secundarios (especialmente Compras, Producción e Inventario avanzado).
-- 🟡 GitHub Actions no está disparando CI para la rama del PR #58; no fusionar hasta validar compilación actual por una vía confiable.
+- ✅ Estados principales de Compras ya traducidos.
+- 🟡 Quedan códigos técnicos visibles en Producción e Inventario avanzado y algunos módulos secundarios.
+- 🟡 GitHub Actions no está disparando CI/check-runs para la rama del PR #58; no fusionar hasta validar compilación actual por una vía confiable.
 
 ## Pendientes reales actuales
-1. 🟡 Exponer en Compras: pedido relacionado + Didi/Camión/Propio/Otro + costo de recolección.
+1. 🟡 Selector de producto en reacción de precio cuando una cotización contiene varios productos.
 2. 🟡 Acción rápida “Diseño listo” en Pedidos/Producción.
 3. 🟡 Calculadora de lona en UI usando ancho × alto × tarifa + redondeo.
-4. 🟡 Alerta/recomendación cuando sube el costo de un insumo.
-5. 🟡 Recomendación de precio/margen apoyada en frecuencia, demanda y rentabilidad, sin cambiar precios automáticamente.
-6. 🟡 Captura guiada de camión ida/regreso y gasolina vinculada al pedido cuando corresponda.
-7. 🟡 Traducir estados técnicos visibles restantes.
-8. 🟡 Validar compilación completa del head actual antes de fusionar PR #58.
+4. 🟡 Captura guiada de camión ida/regreso y gasolina vinculada al pedido cuando corresponda.
+5. 🟡 Traducir estados técnicos visibles restantes.
+6. 🟡 Revisar/activar protección de contraseñas filtradas en Supabase Auth si la configuración disponible lo permite.
+7. 🟡 Validar compilación completa del head actual antes de fusionar PR #58.
