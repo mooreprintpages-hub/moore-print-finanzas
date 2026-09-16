@@ -28,10 +28,22 @@ export async function loadPriceTiers(supabase,productId){
   return data ?? []
 }
 
-export function quoteForQuantity(product,tiers,quantity){
+export function roundUpToFive(value){
+  const n=Number(value)
+  return Number.isFinite(n)&&n>0?Math.ceil(n/5)*5:0
+}
+
+export function quoteForQuantity(product,tiers,quantity,values={}){
   const qty=Math.max(1,Number(quantity)||1)
+  if(product?.pricing_mode==='area'){
+    const width=Number(values.ancho),height=Number(values.alto),pricePerSquareMeter=Number(product.base_price)
+    if(!(width>0&&height>0&&pricePerSquareMeter>0))return null
+    const area=width*height
+    const rawTotal=area*pricePerSquareMeter*qty
+    return {quantity:qty,unitPrice:pricePerSquareMeter,total:roundUpToFive(rawTotal),rawTotal,area,label:'Precio calculado por m²',pricingMode:'area'}
+  }
   const tier=tiers.find(t=>qty>=t.min_quantity&&(t.max_quantity==null||qty<=t.max_quantity))
   const unitPrice=tier?.unit_price ?? product?.base_price
   if(unitPrice==null) return null
-  return {quantity:qty,unitPrice:Number(unitPrice),total:Number(unitPrice)*qty,label:tier?.label||null}
+  return {quantity:qty,unitPrice:Number(unitPrice),total:Number(unitPrice)*qty,label:tier?.label||null,pricingMode:'unit'}
 }
