@@ -14,6 +14,13 @@ export async function loadCatalog(supabase) {
   return { categories: categoriesResult.data ?? [], products }
 }
 
+export async function loadConfigurationFields(supabase,productId){
+  if(!supabase||!productId)return []
+  const{data,error}=await supabase.from('product_configuration_fields').select('id,field_key,label,field_type,options,placeholder,unit,is_required,sort_order').eq('product_id',productId).eq('is_active',true).order('sort_order')
+  if(error)throw error
+  return data??[]
+}
+
 export async function loadPriceTiers(supabase,productId){
   if(!supabase||!productId) return []
   const {data,error}=await supabase.from('product_price_tiers').select('min_quantity,max_quantity,unit_price,label').eq('product_id',productId).order('min_quantity')
