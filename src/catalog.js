@@ -39,8 +39,9 @@ export function quoteForQuantity(product,tiers,quantity,values={}){
     const width=Number(values.ancho),height=Number(values.alto),pricePerSquareMeter=Number(product.base_price)
     if(!(width>0&&height>0&&pricePerSquareMeter>0))return null
     const area=width*height
-    const rawTotal=area*pricePerSquareMeter*qty
-    return {quantity:qty,unitPrice:pricePerSquareMeter,total:roundUpToFive(rawTotal),rawTotal,area,label:'Precio calculado por m²',pricingMode:'area'}
+    const rawUnitTotal=area*pricePerSquareMeter
+    const roundedUnitTotal=roundUpToFive(rawUnitTotal)
+    return {quantity:qty,unitPrice:pricePerSquareMeter,total:roundedUnitTotal*qty,rawTotal:rawUnitTotal*qty,rawUnitTotal,roundedUnitTotal,area,label:'Precio calculado por m²',pricingMode:'area'}
   }
   const tier=tiers.find(t=>qty>=t.min_quantity&&(t.max_quantity==null||qty<=t.max_quantity))
   const unitPrice=tier?.unit_price ?? product?.base_price
